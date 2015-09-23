@@ -1,0 +1,121 @@
+<properties
+   pageTitle="Configuring Webhooks for Azure Alerts"
+   description="Configure webhook to route your Azure Alerts to other channels"
+   services="azure-portal"
+   documentationCenter="na"
+   authors="kamathashwin"
+   manager="cshankar"
+   editor=""/>
+
+<tags
+   ms.service="azure-portal"
+   ms.devlang="na"
+   ms.topic="article"
+   ms.tgt_pltfrm="na"
+   ms.workload="na"
+   ms.date="09/29/2015"
+   ms.author="ashwink"/>
+
+# Configure Webhooks for Azure Alerts
+
+Webhooks allow the user to route the Azure Alert notifications to other systems for post-processing or custom notifications. Examples of this can be routing the Alert to services that can handle an incoming web request to send SMS, execute scripts (runbooks), log incidents in a system, notify a team via chat/messaging services etc.
+
+  
+
+The webhook uri must be a valid HTTP or HTTPS endpoint. The Azure Alert service will make a POST operation at the specified webhook, passing on a specific JSON payload and schema.
+
+## Configuring webhook via the Azure Portal
+
+1. In the [Azure portal](https://portal.azure.com/), navigate to the resource you are interested in creating alerts for.
+
+2. Click on **Alert rules** tile in the **Operations** lens
+ 
+3. Open an existing alert or Create a new alert rule where you wish to add the webhook
+
+4. Type or paste the webhook uri into the **webhook** textbox
+
+![Alt text; Add image here. Describe image.][1]
+
+
+> [AZURE.NOTE] webhooks will be supported for alerts on metrics in this initial release. Webhooks will be supported for alert on events in our future release.
+
+## Authentication
+Two types of authentication are supported:
+
+1. Token Based : In this case you can save the webhook uri with a token Id such as - https://mysamplealert/webcallback?tokenid=sometokenid&someparameter=somevalue
+
+2. Basic Auth : This supports a userid and a password. In this case your webhook uri will look like the following: https://userid:password@mysamplealert/webcallback?someparamater=somevalue&foo=bar
+
+
+
+
+## Payload Schema
+
+
+
+The POST operation will contain the following JSON payload and schema for all metric based alerts. 
+
+        {
+                "status": "Activated",
+                "context": {
+                                "id": "/subscriptions/s1/resourceGroups/useast/providers/microsoft.insights/alertrules/ruleName1",
+                                "name": "ruleName1",
+                                "description": "some description",
+                                "conditionType": "Metric",
+                                "condition": {
+                                                "metricName": "Requests",
+                                                "metricUnit": "Count",
+                                                "metricValue": "10",
+                                                "threshold": "10",
+                                                "windowSize": "15",
+                                                "timeAggregation": "Average",
+                                                "operator": "GreaterThanOrEqual"
+                                },
+                                "subscriptionId": "s1",
+                                "resourceGroupName": "useast",
+                                "timestamp": "2015-08-14T22:26:41.9975398Z",
+                                "resourceName": "mysite1",
+                                "resourceType": "microsoft.foo/sites",
+                                "resourceId": "/subscriptions/s1/resourceGroups/useast/providers/microsoft.foo/sites/mysite1",
+                                "resourceRegion": "centralus",
+                                "portalLink": "https://auxcurrent.windows.azure-test.net/#resource/subscriptions/s1/resourceGroups/useast/providers/microsoft.foo/sites/mysite1"
+                },
+                "properties": {
+                                "key1": "value1",
+								"key2": "value2"
+                }
+		}
+
+
+    > [AZURE.NOTE] In this release the payload will support only alert on metrics. In our next refresh, we will add support for alerts on Events (""conditionType"" : ""Event"") 
+
+
+
+
+<!--Every topic should have next steps and links to the next logical set of content to keep the customer engaged-->
+## Next steps
+Here are some of the integrations available for your Azure Alerts using the webhook feature:
+
+Integrate Azure Alerts with PagerDuty 
+
+Execute a Runbook script 
+
+Send SMS for Azure Alerts via Twilio using Logic app
+
+Send Slack messages for Azure Alerts using Logic app
+
+Send messages to a Queue based on Azure Alerts using Logic app
+
+Send a HipChat message 
+
+<!--Image references-->
+[1]: ./
+[5]: ./media/markdown-template-for-new-articles/octocats.png
+[6]: ./media/markdown-template-for-new-articles/pretty49.png
+[7]: ./media/markdown-template-for-new-articles/channel-9.png
+[8]: ./media/markdown-template-for-new-articles/copytemplate.png
+
+<!--Reference style links - using these makes the source content way more readable than using inline links-->
+[gog]: http://google.com/        
+[yah]: http://search.yahoo.com/  
+[msn]: http://search.msn.com/    
